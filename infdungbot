@@ -1,0 +1,3573 @@
+    #include <Constants.au3>
+    #include <Array.au3>
+    #include <ButtonConstants.au3>
+    #include <EditConstants.au3>
+    #include <GUIConstantsEx.au3>
+    #include <SliderConstants.au3>
+    #include <StaticConstants.au3>
+    #include <WindowsConstants.au3>
+    global $spellletter,$qm,$sdog,$titl,$scat,$sf,$stairx,$stairy,$hungry,$shppercent,$smppercent,$wallx[1],$wally[1],$arrox[1],$arroy[1],$walldistancex[1000],$walldistancey[1000],$dogf,$eat,$xriver,$tries,$stairs,$stairlocationx,$stairlocationy,$melee,$bookcast,$magic,$lastmapline,$mapline1,$firstmapline,$handle,$File,$raw,$itemx[1],$itemy[1],$itemclass[1],$monsterx[1],$monstery[1],$monstername[1],$mobloc1,$mobloc2,$mobloc3,$mobloc4,$mobloc6,$mobloc7,$mobloc8,$mobloc9,$cast,$magic,$spellname,$itemnumber
+    $itemx[0]="notset"
+    $itemy[0]="notset"
+    $itemclass[0]="notset"
+    $monsterx[0]="notset"
+    $monstery[0]="notset"
+    $monstername[0]="notset"
+    $wallx[0]="notset"
+    $wally[0]="notset"
+    $arrox[0]="notset"
+    $arroy[0]="notset"
+    $copiedtoclip=0
+    $last="up"
+    $mudface=0
+    $linenumber=1
+    $mode=0
+    $fire=0
+    $sfoun=0
+    $eat=1
+    $loggedfromstairs=0
+    $set=0
+    $eatingcounter=0
+    $on=0
+    $x=1
+    $y=1
+    $cattele=0
+    $pcx=0
+    $pcy=0
+    $x1armor=1
+    $x1amulet=1
+    $x1bracer=1
+    $x1weapon=1
+    $x1missileweapon=1
+    $x1tool=1
+    $x1instrument=1
+    $soa=0
+    $x1ring=1
+    $x1wand=1
+    $speedcomp=0
+    $x1potion=1
+    $x1scroll=1
+    $x1book=1
+    $x1food=1
+    $x1gold=1
+    $newmap=1
+    $x1gem=1
+    $xriver=0
+    $spellcastcounter=0
+    $speedold=0
+    $cast=1
+    $ranfromat=0
+    $usedstair=0
+    $magic=1
+    $melee=0
+    $bookcast=0
+    $ranfromat=0
+    $tries=0
+    $spellname="acid bolt"
+    $spellbookname=""
+    $castinvis=0
+    $title = GUICreate("IDHopBotV0.1Beta", 452, 291, 719, 135)
+    $Carmor = GUICtrlCreateCheckbox("armor", 8, 40, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Camulet = GUICtrlCreateCheckbox("amulet", 8, 56, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cbracer = GUICtrlCreateCheckbox("bracer", 8, 72, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cweapon = GUICtrlCreateCheckbox("weapon", 8, 88, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cmissileweapon = GUICtrlCreateCheckbox("missileweapon", 8, 104, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Ctool = GUICtrlCreateCheckbox("tool", 8, 120, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cinstrument = GUICtrlCreateCheckbox("instrument", 8, 136, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cring = GUICtrlCreateCheckbox("ring", 8, 152, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cwand = GUICtrlCreateCheckbox("wand", 8, 168, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cpotion = GUICtrlCreateCheckbox("potion", 8, 184, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cscroll = GUICtrlCreateCheckbox("scroll", 8, 200, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cbook = GUICtrlCreateCheckbox("book", 8, 216, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cfood = GUICtrlCreateCheckbox("food", 8, 232, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cgold = GUICtrlCreateCheckbox("gold", 8, 248, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cgem = GUICtrlCreateCheckbox("gem", 8, 264, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $inputspell = GUICtrlCreateInput("spellname", 320, 48, 121, 21)
+    $Label1 = GUICtrlCreateLabel("Spell to cast:", 224, 56, 65, 17)
+    $Label2 = GUICtrlCreateLabel("first word of title:", 224, 72, 87, 17)
+    $bookcastinput = GUICtrlCreateInput("ancardia", 320, 72, 121, 21)
+    $Cblinkdog = GUICtrlCreateCheckbox("stop for blink dog", 128, 120, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Ccat = GUICtrlCreateCheckbox("stop for cats", 128, 136, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Shp = GUICtrlCreateSlider(128, 168, 150, 45)
+    GUICtrlSetLimit (-1,100,0)
+    GUICtrlSetData($shp, 75)
+    $Smp = GUICtrlCreateSlider(128, 216, 150, 45)
+    GUICtrlSetLimit (-1,100,0)
+    GUICtrlSetData($smp, 10)
+    $Cquickm = GUICtrlCreateCheckbox("quickmark", 128, 250, 150, 45)
+    GUICtrlSetState(-1, 1)
+    $Label3 = GUICtrlCreateLabel("ID Hop bot", 152, 0, 128, 29, $SS_CENTER)
+    GUICtrlSetFont(-1, 14, 400, 0, "Snap ITC")
+    $Label4 = GUICtrlCreateLabel("Scripted by Tomme", 312, 168, 95, 17)
+    $Label5 = GUICtrlCreateLabel("thx to", 336, 184, 30, 17)
+    $Label6 = GUICtrlCreateLabel("Gutt", 304, 208, 24, 17)
+    $Label7 = GUICtrlCreateLabel("Enihi", 328, 232, 27, 17)
+    $Label8 = GUICtrlCreateLabel("Samin", 360, 248, 33, 17)
+    $Label9 = GUICtrlCreateLabel("HP", 112, 168, 19, 17)
+    $Label10 = GUICtrlCreateLabel("MP", 112, 216, 20, 17)
+    $Bstart = GUICtrlCreateButton("start", 320, 104, 75, 25)
+    $Breset = GUICtrlCreateButton("reset", 320, 128, 75, 25)
+    $Battmode = GUICtrlCreateButton("Attackmode", 136, 56, 75, 25)
+    GUISetState(@SW_SHOW)
+    $mplow=0
+    func gal ()
+        while $copiedtoclip=0
+            ControlSend($handle, "","" , "!{SPACE}")
+            sleep(50)
+            ControlSend($handle, "","" , "o")
+            sleep(60)
+            $raw=ClipGet()
+            if @error then MsgBox(0,"","failed to retrieve clipboard")
+            $checkup=StringInStr($raw,"DV/PV",1)
+            if $checkup>0 then
+                $copiedtoclip=1
+            EndIf
+            $raw=ClipGet()
+            $checkdark=StringInStr($raw,"It's dark here")
+            if $checkdark>0 Then
+                $checkup=StringInStr($raw,"leading upwards")
+                if $checkup>0 Then
+                    ControlSend($handle, "","" , "<")
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(100)
+                EndIf
+                $checkup=StringInStr($raw,"leading downwards")
+                if $checkup>0 Then
+                    ControlSend($handle, "","" , ">")
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(100)
+                EndIf
+            EndIf
+            $checkspellmenu=StringInStr($raw,"SELECT A SPELL TO CAST",0,2)
+            if $checkspellmenu>0 then
+                ControlSend($handle, "","" , "Z")
+                sleep(150)
+            EndIf
+        WEnd
+        $copiedtoclip=0
+        FileClose($File)
+        local $file = FileOpen(@ScriptDir&"\log.txt", 2)
+        If $file = -1 Then
+            MsgBox(0, "Error", "Unable to open file1.")
+            Exit
+        EndIf
+        FileWrite($file, $raw)
+        local $file = FileOpen(@ScriptDir&"\log.txt", 0)
+        If $file = -1 Then
+            MsgBox(0, "Error", "Unable to open file2.")
+            Exit
+        EndIf
+        while 1 ;find adommap #
+            Local $data=FileReadline($file)
+            If @error = -1 Then ExitLoop
+            $linenumber +=1
+        WEnd
+        $lastline=$linenumber
+        $linenumber=1
+        $liline=$lastline-1
+        $vstatline=$lastline-2
+        $fstatline=$lastline-3
+        $mapline20=$lastline-4
+        $mapline1=$lastline-23
+        $tif2line=$lastline-24
+        $tif1line=$lastline-25
+        $firstmapline=$mapline1
+        $lastmapline=$mapline20
+        $pcleftx=$pcx-1
+        $pcrightx=$pcx+1
+        $pcdowny=$pcy+1
+        $pcupy=$pcy-1
+        $file = FileOpen(@ScriptDir&"\log.txt", 0)
+        $x=1
+        $y=1
+       
+        $sfoun=0
+        $vsline=FileReadLine($file,$vstatline)
+        $vstatarray=stringsplit($vsline,":",1)
+        if ubound($vstatarray)=7 Then
+            $dvpv=$vstatarray[2]
+            $hp=$vstatarray[3]
+            $mp=$vstatarray[4]
+            $exp=$vstatarray[5]
+            $speed=$vstatarray[6]
+            if $speedcomp=0 Then
+                $speedold=$speed+100
+                $speedcomp=1
+            EndIf
+            if $speedold=$speed AND $soa=1 Then
+                ControlSend($handle, "","" , "Z")
+                sleep(100)
+                ControlSend($handle, "","" , "9")
+                sleep(100)
+                $speedcomp=0
+            EndIf
+            $hpmaxmin=stringsplit($hp,"(",1)
+            if IsArray($hpmaxmin) Then
+                $hpc=StringTrimLeft ($hpmaxmin[1],1)
+                if ubound($hpmaxmin)>1 Then
+                    $hpmax=stringsplit($hpmaxmin[2],")",1)
+                    $hpm=$hpmax[1]
+                    $hpl=Round (($hpm/100)*$shppercent)
+                    if $hpc<=$hpl Then
+                        MsgBox(0,"IDHopBot","Hp dropped below 4/5")
+                    EndIf
+                EndIf
+            EndIf
+            $mpmaxmin=stringsplit($mp,"(",1)
+            if IsArray($mpmaxmin) Then
+                $mpc=StringTrimLeft ($mpmaxmin[1],1)
+                $mpmax=stringsplit($mpmaxmin[2],")",1)
+                $mpm=$mpmax[1]
+                $mpl=Round(($mpm/100)*$smppercent)
+                if $mpc<=$mpl Then
+                    $mplow=1
+                EndIf
+            EndIf
+        EndIf
+        $sf=0
+        $lil=FileReadLine($file,$liline)
+        Select
+            case StringInStr($lil,"hungry")
+                $hungry=1
+            case StringInStr($lil,"blind")
+                if $mudface=0 Then
+                    ControlSend($handle, "","" , "F")
+                    sleep(100)
+                    ControlSend($handle, "","" , "{ENTER}")
+                    sleep(100)
+                    $mudface=1
+                Else
+                    MsgBox(0,"IDHopBot","You are blind")
+                    $mudface=0
+                EndIf
+            case StringInStr($lil,"poisoned")
+                MsgBox(0,"IDHopBot","You are poisoned")
+            case StringInStr($lil,"sick")
+                MsgBox(0,"IDHopBot","You are sick")
+            case StringInStr($lil,"paral")
+                MsgBox(0,"IDHopBot","You are paralyzed!")
+            case StringInStr($lil,"sleeping")
+                MsgBox(0,"IDHopBot","You are asleep")
+            case StringInStr($lil,"confused")
+                MsgBox(0,"IDHopBot","You are confused")
+            case StringInStr($lil,"strained")
+                MsgBox(0,"IDHopBot","You are strained")
+        EndSelect
+        if StringInStr($lil,"invisibile") AND $castinvis=1 Then
+            sleep(1)
+        Elseif  $castinvis=1 Then
+            ControlSend($handle, "","" , "Z")
+            sleep(70)
+            ControlSend($handle, "","" , "6")
+            sleep(70)
+            ControlSend($handle, "","" , "5")
+            sleep(70)
+            ControlSend($handle, "","" , "{ENTER}")
+            sleep(70)
+        EndIf    
+        for $i=0 to ubound($itemx)-1
+            if $i=0 Then
+                $itemx[0]="notset"
+                $itemy[0]="notset"
+                $itemclass[0]="notset"
+            Else
+            _ArrayDelete($itemx,$i)
+            _ArrayDelete($itemy,$i)
+            _ArrayDelete($itemclass,$i)
+            endif
+        next
+        for $i=0 to ubound($monsterx)-1
+            if $i=0 Then
+                $monsterx[0]="notset"
+                $monstery[0]="notset"
+                $monstername[0]="notset"
+            Else
+            _ArrayDelete($monsterx,$i)
+            _ArrayDelete($monstery,$i)
+            _ArrayDelete($monstername,$i)
+            endif
+        next
+        for $i=0 to ubound($wallx)-1
+            if $i=0 Then
+                $wallx[0]="notset"
+                $wally[0]="notset"
+            Else
+            _ArrayDelete($wallx,$i)
+            _ArrayDelete($wally,$i)
+            endif
+        next
+        $pcx=0
+        $pcy=0
+        $firstmapline=$mapline1
+        $cattele=0
+        While 1 ;log items/mobs/pc#
+            $data=FileReadline($file,$firstmapline)
+            $char=StringRegExp ( $data,".",3)
+            for $i = 0 to UBound($char) - 1
+            select
+                case $char[$i]="@"
+                    IF $pcx>0 then
+                        ControlSend($handle, "","" , "Z")
+                        sleep(70)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{ENTER}")
+                        sleep(70)
+                        ControlSend($handle, "","" , ">")
+                        sleep(70)
+                        ControlSend($handle, "","" , "<")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        if $ranfromat=1 Then
+                            ControlSend($handle, "","" , "Z")
+                            sleep(70)
+                            ControlSend($handle, "","" , "1")
+                            sleep(70)
+                            ControlSend($handle, "","" , "{ENTER}")
+                            sleep(70)
+                            $ranfromat=0
+                        EndIf
+                        $ranfromat=1
+                    else
+                        $pcx=$x
+                        $pcy=$y
+                        if $newmap=1 Then
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                            $newmap=0
+                        EndIf
+                    EndIf
+                Case $char[$i]='['
+                    if $x1armor=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="armor"
+                        Else
+                            _ArrayAdd($itemclass,"armor")
+                        EndIf
+                    EndIf
+                Case $char[$i]="'"
+                    if $x1amulet=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="amulet"
+                        Else
+                            _ArrayAdd($itemclass,"amulet")
+                        EndIf
+                    EndIf
+                Case $char[$i]='~'
+                    if $x1bracer=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="bracer"
+                        Else
+                            _ArrayAdd($itemclass,"bracer")
+                        EndIf
+                    EndIf
+                Case $char[$i]='('
+                    if $x1weapon=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="weapon"
+                        Else
+                            _ArrayAdd($itemclass,"weapon")
+                        EndIf
+                    EndIf
+                Case $char[$i]='}'
+                    if $x1missileweapon=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="missileweapon"
+                        Else
+                            _ArrayAdd($itemclass,"missileweapon")
+                        EndIf
+                    EndIf
+                Case $char[$i]=']'
+                    if $x1tool=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="tool"
+                        Else
+                            _ArrayAdd($itemclass,"tool")
+                        EndIf
+                    EndIf
+                Case $char[$i]='='
+                    if $x1ring=1 AND $xriver=0 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="ring"
+                        Else
+                            _ArrayAdd($itemclass,"ring")
+                        EndIf
+                    EndIf
+                Case $char[$i]='\'
+                    if $x1wand=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="wand"
+                        Else
+                            _ArrayAdd($itemclass,"wand")
+                        EndIf
+                    EndIf
+                Case $char[$i]='!'
+                    if $x1potion=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="potion"
+                        Else
+                            _ArrayAdd($itemclass,"potion")
+                        EndIf
+                    EndIf
+                Case $char[$i]='?'
+                    if $x1scroll=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="scroll"
+                        Else
+                            _ArrayAdd($itemclass,"scroll")
+                        EndIf
+                    EndIf
+                Case $char[$i]='"'
+                    if $x1book=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="book"
+                        Else
+                            _ArrayAdd($itemclass,"book")
+                        EndIf
+                    EndIf
+                Case $char[$i]='{'
+                    if $x1instrument=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="instrument"
+                        Else
+                            _ArrayAdd($itemclass,"instrument")
+                        EndIf
+                    EndIf
+                Case $char[$i]='%'
+                    if $x1food=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="food"
+                        Else
+                            _ArrayAdd($itemclass,"food")
+                        EndIf
+                    EndIf
+                Case $char[$i]='$'
+                    if $x1gold=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="gold"
+                        Else
+                            _ArrayAdd($itemclass,"gold")
+                        EndIf
+                    EndIf
+                Case $char[$i]='*'
+                    if $x1gem=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="gem"
+                        Else
+                            _ArrayAdd($itemclass,"gem")
+                        EndIf
+                    EndIf
+                case StringIsAlpha($char[$i])
+                    Select
+                        Case $char[$i]="d"
+                            if $sdog=1 Then
+                                $dogf=1
+                                $dogx=$x
+                                $dogy=$y
+                            Else
+                                if $monsterx[0]="notset" Then
+                                    $monsterx[0]=$x
+                                Else
+                                    _ArrayAdd($monsterx,$x)
+                                EndIf
+                                if $monstery[0]="notset" Then
+                                    $monstery[0]=$y
+                                Else
+                                    _ArrayAdd($monstery,$y)
+                                EndIf
+                                if $monstername[0]="notset" Then
+                                    $monstername[0]=$char[$i]
+                                Else
+                                    _ArrayAdd($monstername,$char[$i])
+                                EndIf
+                            EndIf
+                        Case $char[$i]="f"
+                            if StringIsLower ($char[$i]) AND $scat=1 then
+                                $cattele=1
+                            Else
+                                if $monsterx[0]="notset" Then
+                                    $monsterx[0]=$x
+                                Else
+                                    _ArrayAdd($monsterx,$x)
+                                EndIf
+                                if $monstery[0]="notset" Then
+                                    $monstery[0]=$y
+                                Else
+                                    _ArrayAdd($monstery,$y)
+                                EndIf
+                                if $monstername[0]="notset" Then
+                                    $monstername[0]=$char[$i]
+                                Else
+                                    _ArrayAdd($monstername,$char[$i])
+                                EndIf
+                            EndIf
+                        Case Else
+                            if $monsterx[0]="notset" Then
+                                $monsterx[0]=$x
+                            Else
+                                _ArrayAdd($monsterx,$x)
+                            EndIf
+                            if $monstery[0]="notset" Then
+                                $monstery[0]=$y
+                            Else
+                                _ArrayAdd($monstery,$y)
+                            EndIf
+                            if $monstername[0]="notset" Then
+                                $monstername[0]=$char[$i]
+                            Else
+                                _ArrayAdd($monstername,$char[$i])
+                            EndIf
+                    EndSelect
+                case $char[$i]='&'
+                    if $monsterx[0]="notset" Then
+                        $monsterx[0]=$x
+                    Else
+                        _ArrayAdd($monsterx,$x)
+                    EndIf
+                    If $monstery[0]="notset" Then
+                        $monstery[0]=$y
+                    Else
+                        _ArrayAdd($monstery,$y)
+                    EndIf
+                    if $monstername[0]="notset" Then
+                        $monstername[0]=$char
+                    Else
+                        _ArrayAdd($monstername,$char)
+                    EndIf
+                case $char[$i]='<'
+                        if $last="down"then
+                            $stairs=1
+                            $sf=1
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                        endif
+                Case $char[$i]='>'
+                        if $last="up" then
+                            $stairs=0
+                            $sf=1
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                        EndIf
+                case $char[$i]='#'
+                    if $wallx[0]="notset" Then
+                        $wallx[0]=$x
+                    Else
+                        _ArrayAdd($wallx,$x)
+                    EndIf
+                    if $wally[0]="notset" Then
+                        $wally[0]=$y
+                    Else
+                        _ArrayAdd($wally,$y)
+                    EndIf
+                case $char[$i]='/'
+                    if $arrox[0]="notset" Then
+                        $arrox[0]=$x
+                    Else
+                        _ArrayAdd($arrox,$x)
+                    EndIf
+                    if $arroy[0]="notset" Then
+                        $arroy[0]=$y
+                    Else
+                        _ArrayAdd($arroy,$y)
+                    EndIf
+            EndSelect
+                $x+=1
+            next
+            $x=1
+            $y+=1
+            $firstmapline+=1
+            if $firstmapline=$lastmapline then
+                ExitLoop
+            EndIf
+        Wend
+        if $dogf=1 Then
+            ControlSend($handle, "","" , "l")
+            sleep(50)
+            $xdognumber=$dogx-$pcx
+            $ydognumber=$dogy-$pcy
+            while 1
+                if $xdognumber>0 then
+                    ControlSend($handle, "","" , "6")
+                    sleep(50)
+                    $xdognumber-=1
+                ElseIf $xdognumber<0 Then
+                    ControlSend($handle, "","" , "4")
+                    sleep(50)
+                    $xdognumber+=1
+                EndIf
+                if $xdognumber=0 Then
+                    ExitLoop
+                EndIf
+            WEnd
+            for $j=1 to abs($ydognumber)
+                if $ydognumber>0 then
+                    ControlSend($handle, "","" , "2")
+                    sleep(50)
+                ElseIf $ydognumber<0 Then
+                    ControlSend($handle, "","" , "8")
+                    sleep(50)
+                EndIf
+            Next
+            sleep(100)
+            ControlSend($handle, "","" , "!{SPACE}")
+            sleep(70)
+            ControlSend($handle, "","" , "o")
+            sleep(100)
+            $raw=ClipGet()
+            if StringInStr($raw,"This is a blink dog.") Then
+                MsgBox(0,"IDHopBot","Blink dog has been found")
+            Else
+                if $monsterx[0]="notset" Then
+                    $monsterx[0]=$dogx
+                Else
+                    _ArrayAdd($monsterx,$dogx)
+                EndIf
+                if $monstery[0]="notset" Then
+                    $monstery[0]=$dogy
+                Else
+                    _ArrayAdd($monstery,$dogy)
+                EndIf
+                if $monstername[0]="notset" Then
+                    $monstername[0]="d"
+                Else
+                    _ArrayAdd($monstername,"d")
+                EndIf
+            EndIf
+            ControlSend($handle, "","" , "z")
+        EndIf
+        $dogf=0
+        for $i=0 to ubound($wallx)-1
+            $walldistancex[$i]=($wallx[$i]-$pcx)
+            $walldistancey[$i]=($wally[$i]-$pcy)
+        Next
+        $smallestdistance=100
+        for $i=0 to ubound($itemx)-1 ;find closest item#
+            if $itemx>0 then
+                $itemxoffset=Abs($itemx[$i]-$pcx)
+                $itemyoffset=Abs($itemy[$i]-$pcy)
+                if $itemxoffset>$itemyoffset Then $distance=$itemxoffset
+                if $itemyoffset>$itemxoffset Then $distance=$itemyoffset
+                if $itemxoffset=$itemyoffset Then $distance=$itemxoffset    
+                if $smallestdistance>$distance then
+                    $smallestdistance=$distance
+                    $itemnumber=$i
+                EndIf
+            EndIf
+        Next
+        $stairx=$stairlocationx-$pcx
+        $stairy=$stairlocationy-$pcy
+        $mobloc1=0
+        $mobloc2=0
+        $mobloc3=0
+        $mobloc4=0
+        $mobloc6=0
+        $mobloc7=0
+        $mobloc8=0
+        $mobloc9=0
+        $cattele=0
+        $fire=0
+        for $i=0 to ubound($monsterx)-1 ;check if mobs are next to you#
+            if $monsterx[$i]>0 Then
+                select
+                    case $monsterx[$i]=$pcleftx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc1=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcy
+                                $mobloc4=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc7=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                    case $monsterx[$i]=$pcx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc2=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc8=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                    case $monsterx[$i]=$pcrightx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc3=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcy
+                                $mobloc6=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc9=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                EndSelect
+            EndIf
+        Next
+        $firstmapline=$mapline1
+        $foodletter=0
+        $firstmapline=$mapline1
+        $ringfound=0
+        for $i=0 to ubound($itemclass)-1
+            if $itemclass[$i]="ring" Then
+                if $ringfound=2 Then
+                    $xriver=1
+                endif
+                $ringfound+=1
+            EndIf
+        next
+        $firstmapline=$mapline1
+        FileClose($file)    
+    EndFunc
+    func attack ()
+        Select
+            case $melee=1
+                Select
+                    case $mobloc1=1
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc2=1
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc3=1
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc4=1
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc6=1
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc7=1
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc8=1
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc9=1
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                EndSelect
+     
+            case $magic=1 AND $qm=4
+                Select
+                    case $mobloc1=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc2=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc3=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc4=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc6=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc7=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc8=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc9=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                EndSelect
+                   
+            case $magic=1 AND $qm=1
+                Select
+                    case $mobloc1=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc2=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc3=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc4=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc6=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc7=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc8=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc9=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                EndSelect    
+                if $spellcastcounter=3 then $cast=1    
+            case $bookcast=1
+        EndSelect
+        if $mplow=1 Then
+            ControlSend($handle, "","" , "w5")
+            sleep(1000)
+            ControlSend($handle, "","" , "{enter}")
+        EndIf    
+    EndFunc
+    func findspell ()
+        if $magic=1 AND $cast=1 Then
+            ControlSend($handle, "","" , "Z")
+            sleep(150)
+            while $copiedtoclip=0
+                ControlSend($handle, "","" , "!{SPACE}")
+                sleep(20)
+                ControlSend($handle, "","" , "o")
+                sleep(70)
+                $raw=ClipGet()
+                $checkup=StringInStr($raw,"-",0,2)
+                if $checkup>0 then
+                    $copiedtoclip=1
+                EndIf
+            WEnd
+            $copiedtoclip=0
+            FileClose($File)
+            local $file = FileOpen(@ScriptDir&"\logformagic.txt", 2)
+            If $file = -1 Then
+                MsgBox(0, "Error", "Unable to open file1.")
+                Exit
+            EndIf
+            FileWrite($file, $raw)
+            local $file = FileOpen(@ScriptDir&"\logformagic.txt", 0)
+            If $file = -1 Then
+                MsgBox(0, "Error", "Unable to open file2.")
+                Exit
+            EndIf
+            $file = FileOpen(@ScriptDir&"\logformagic.txt", 0)
+            $firstline=0
+            while 1
+                $spellist=FileReadline($file,$firstline)
+                $spell=stringinstr($spellist,$spellname)
+                if $spell>0 Then
+                    $x=stringsplit($spellist,"-")
+                    $spelx=StringRegExp($x[1],'[[:alpha:]]',3)
+                    $spellletter=$spelx[0]
+                EndIf
+                $firstline+=1
+                if $firstline=200 then
+                    ExitLoop
+                EndIf
+            WEnd
+            sleep(150)
+     
+                ControlSend($handle, "","" , "!{SPACE}")
+                sleep(70)
+                ControlSend($handle, "","" , "o")
+                sleep(70)
+                $raw=ClipGet()
+                $checkup=StringInStr($raw," - ",0,2)
+                if $checkup>0 then
+                    ControlSend($handle, "","" , "Z")
+                    sleep(150)
+                    $copiedtoclip=1
+                EndIf
+     
+            $copiedtoclip=0
+           
+        EndIf
+        FileClose($file)
+        $cast=0
+    EndFunc
+    func movetoitem ()
+        if $itemx[0]>0 Then
+            $closeitemx=$itemx[$itemnumber]-$pcx
+            $closeitemy=$itemy[$itemnumber]-$pcy
+            Select
+                case $closeitemx<0
+                    $left=1
+                    $right=0
+                case $closeitemx=0
+                    $left=0
+                    $right=0
+                case $closeitemx>0
+                    $left=0
+                    $right=1
+            EndSelect
+            Select
+                case $closeitemy<0
+                    $up=1
+                    $down=0
+                case $closeitemy=0
+                    $up=0
+                    $down=0
+                case $closeitemy>0
+                    $up=0
+                    $down=1
+            EndSelect
+            $xcdir=0
+            Select
+                case $up=1 AND $left=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=-1 AND $walldistancey[$i]=-1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "4")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "8")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "7")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=1 AND $left=0 AND $right=0
+                    ControlSend($handle, "","" , "8")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=1 AND $right=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=1 AND $walldistancey[$i]=-1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "6")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "8")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "9")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=0 AND $left=1 AND $down=0
+                    ControlSend($handle, "","" , "4")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=0 AND $right=1 AND $down=0
+                    ControlSend($handle, "","" , "6")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $left=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=-1 AND $walldistancey[$i]=1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "4")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "2")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "1")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $left=0 AND $right=0
+                    ControlSend($handle, "","" , "2")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $right=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=1 AND $walldistancey[$i]=1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "6")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "2")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "3")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+            EndSelect
+            sleep(100)
+            ControlSend($handle, "","" , ",")
+            sleep(70)
+            ControlSend($handle, "","" , "{enter}")
+        EndIf
+    EndFunc
+    func runtostairs ()
+       
+            if $stairx<>0 OR $stairy<>0 then
+                $attp=0
+                Select
+                    case $stairx<0
+                        $left=1
+                        $right=0
+                    case $stairx=0
+                        $left=0
+                        $right=0
+                    case $stairx>0
+                        $left=0
+                        $right=1
+                EndSelect
+                Select
+                    case $stairy<0
+                        $up=1
+                        $down=0
+                    case $stairy=0
+                        $up=0
+                        $down=0
+                    case $stairy>0
+                        $up=0
+                        $down=1
+                EndSelect
+                $xcdir=0
+                Select
+                    case $up=1 AND $left=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=-1 AND $walldistancey[$i]=-1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "4")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "8")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "7")
+                        sleep(20)
+                    case $up=1 AND $left=0 AND $right=0
+                        ControlSend($handle, "","" , "8")
+                        sleep(20)
+                    case $up=1 AND $right=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=1 AND $walldistancey[$i]=-1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "6")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "8")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "9")
+                        sleep(20)
+                    case $up=0 AND $left=1 AND $down=0
+                        ControlSend($handle, "","" , "4")
+                        sleep(20)
+                    case $up=0 AND $right=1 AND $down=0
+                        ControlSend($handle, "","" , "6")
+                        sleep(20)
+                    case $down=1 AND $left=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=-1 AND $walldistancey[$i]=1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "4")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "2")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "1")
+                        sleep(20)
+                    case $down=1 AND $left=0 AND $right=0
+                        ControlSend($handle, "","" , "2")
+                        sleep(20)
+                    case $down=1 AND $right=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=1 AND $walldistancey[$i]=1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "6")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "2")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "3")
+                        sleep(20)
+                EndSelect
+                $tries=0    
+            EndIf
+            If  $sf=0 Then
+                    Select
+                        case $stairs=1
+                            ControlSend($handle, "","" , "<")
+                            ControlSend($handle, "","" , "{enter}")
+                            sleep(100)
+                            $stairs=0
+                            $xriver=0
+                            $newmap=1
+                            $stairlocationx=0
+                            $stairlocationy=0
+                            $last="up"
+                        Case $stairs=0
+                            ControlSend($handle, "","" , ">")
+                            sleep(100)
+                            ControlSend($handle, "","" , "{enter}")
+                            sleep(100)
+                            $stairs=1
+                            $xriver=0
+                            $newmap=1
+                            $last="down"
+                            $stairlocationx=0
+                            $stairlocationy=0
+                    EndSelect
+                    $tries+=1
+                    if $tries=2 Then
+                        Select
+                            Case $stairs=0
+                                $stairs=1
+                            Case $stairs=1
+                                $stairs=0
+                        EndSelect
+                        $tries=0
+                    EndIf
+                EndIf
+                $stairx=0
+                $stairy=0
+    EndFunc
+    func getguiinfo ()
+        $nMsg = GUIGetMsg()
+            Switch $nMsg
+                Case $GUI_EVENT_CLOSE
+                    Exit
+                Case $Bstart
+                    $titl=WinGetTitle($spellbookname)
+                    sleep(5000)
+                    WinActivate ($titl)
+                    $handle=WinGetHandle($titl)
+                    $on=1
+                Case $Breset
+                    $titl=WinGetTitle($spellbookname)
+                    WinActivate ($titl)
+                    $handle=WinGetHandle($titl)
+                    If @error Then
+                        MsgBox(4096, "Error", "Failed to find the A.D.O.M. window")
+                    Else
+                        $set=1
+                    EndIf
+                case $Battmode
+                    $mode+=1
+                    if $mode=4 then $mode=1
+                    Select
+                        case $mode=1
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Melee", 136, 56, 75, 25)
+                            $melee=1
+                            $magic=0
+                            $bookcast=0
+                        case $mode=2
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Magic", 136, 56, 75, 25)
+                            $melee=0
+                            $magic=1
+                            $bookcast=0
+                        case $mode=3
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Bookcast", 136, 56, 75, 25)
+                            $melee=0
+                            $magic=1
+                            $bookcast=0
+                    EndSelect
+            EndSwitch
+        $x1armor=GUICtrlRead($carmor)
+        $x1amulet=GUICtrlRead($camulet)
+        $x1bracer=GUICtrlRead($cbracer)
+        $x1weapon=GUICtrlRead($cweapon)
+        $x1missileweapon=GUICtrlRead($cmissileweapon)
+        $x1tool=GUICtrlRead($ctool)
+        $x1instrument=GUICtrlRead($cinstrument)
+        $x1ring=GUICtrlRead($cring)
+        $x1wand=GUICtrlRead($cwand)
+        $x1potion=GUICtrlRead($cpotion)
+        $x1scroll=GUICtrlRead($cscroll)
+        $x1book=GUICtrlRead($cbook)
+        $x1food=GUICtrlRead($cfood)
+        $x1gold=GUICtrlRead($cgold)
+        $x1gem=GUICtrlRead($cgem)
+        $spellname=GUICtrlRead($inputspell)
+        $spellbookname=GUICtrlRead($bookcastinput)
+        $x1gem=GUICtrlRead($cgem)
+        $sdog=GUICtrlRead($Cblinkdog)
+        $scat=GUICtrlRead($Ccat)
+        $shppercent=GUICtrlRead($Shp)
+        $smppercent=GUICtrlRead($Smp)
+        $qm=GUICtrlRead($Cquickm)
+    EndFunc
+    func eat ()
+        if $monsterx[0]="notset" Then
+            if $hungry=1 Then
+                ControlSend($handle, "","" , "e")
+                    sleep(70)
+                ControlSend($handle, "","" , "a")
+                    sleep(70)
+                    $eatingcounter+=1
+                    if $eatingcounter=5 Then
+                        $hungry=0
+                        $eatingcounter=0
+                    EndIf
+            EndIf
+        EndIf
+    EndFunc
+    sleep(2000)
+    while 1
+        getguiinfo ()
+        While $on=1
+            getguiinfo ()
+            while $set=0
+                $handle=WinGetHandle($titl)
+                If @error Then
+                    MsgBox(4096, "Error", "Failed to find the A.D.O.M. window")
+                Else
+                    $set=1
+                EndIf
+            WEnd
+            getguiinfo ()
+            gal ()
+            gal ()
+            findspell ()
+            while $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0
+                $mudface=0
+                getguiinfo ()
+                attack ()
+                gal ()
+                gal ()
+                findspell ()
+            WEnd
+            while $itemx[0]>0
+                $mudface=0
+                while $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0
+                    $mudface=0
+                    getguiinfo ()
+                    attack ()
+                    gal ()
+                    gal ()
+                    findspell ()
+                WEnd
+                $mudface=0
+                getguiinfo ()
+                movetoitem()
+                gal ()
+                gal ()
+            WEnd
+            while $mobloc1=0 And $mobloc2=0 And $mobloc3=0 And $mobloc4=0 And $mobloc6=0 And $mobloc7=0 And $mobloc8=0 And $mobloc9=0 AND $itemx[0]="notset"
+                gal ()
+                getguiinfo ()
+                gal ()
+                eat ()
+                if $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0 OR $itemx[0]>0 Then
+                    ExitLoop
+                Else
+                    getguiinfo ()
+                    runtostairs ()
+                    getguiinfo ()
+                EndIf
+            WEnd        
+        WEnd
+    WEnd
+    #include <Constants.au3>
+    #include <Array.au3>
+    #include <ButtonConstants.au3>
+    #include <EditConstants.au3>
+    #include <GUIConstantsEx.au3>
+    #include <SliderConstants.au3>
+    #include <StaticConstants.au3>
+    #include <WindowsConstants.au3>
+    global $spellletter,$qm,$sdog,$titl,$scat,$sf,$stairx,$stairy,$hungry,$shppercent,$smppercent,$wallx[1],$wally[1],$arrox[1],$arroy[1],$walldistancex[1000],$walldistancey[1000],$dogf,$eat,$xriver,$tries,$stairs,$stairlocationx,$stairlocationy,$melee,$bookcast,$magic,$lastmapline,$mapline1,$firstmapline,$handle,$File,$raw,$itemx[1],$itemy[1],$itemclass[1],$monsterx[1],$monstery[1],$monstername[1],$mobloc1,$mobloc2,$mobloc3,$mobloc4,$mobloc6,$mobloc7,$mobloc8,$mobloc9,$cast,$magic,$spellname,$itemnumber
+    $itemx[0]="notset"
+    $itemy[0]="notset"
+    $itemclass[0]="notset"
+    $monsterx[0]="notset"
+    $monstery[0]="notset"
+    $monstername[0]="notset"
+    $wallx[0]="notset"
+    $wally[0]="notset"
+    $arrox[0]="notset"
+    $arroy[0]="notset"
+    $copiedtoclip=0
+    $last="up"
+    $mudface=0
+    $linenumber=1
+    $mode=0
+    $fire=0
+    $sfoun=0
+    $eat=1
+    $loggedfromstairs=0
+    $set=0
+    $eatingcounter=0
+    $on=0
+    $x=1
+    $y=1
+    $cattele=0
+    $pcx=0
+    $pcy=0
+    $x1armor=1
+    $x1amulet=1
+    $x1bracer=1
+    $x1weapon=1
+    $x1missileweapon=1
+    $x1tool=1
+    $x1instrument=1
+    $soa=0
+    $x1ring=1
+    $x1wand=1
+    $speedcomp=0
+    $x1potion=1
+    $x1scroll=1
+    $x1book=1
+    $x1food=1
+    $x1gold=1
+    $newmap=1
+    $x1gem=1
+    $xriver=0
+    $spellcastcounter=0
+    $speedold=0
+    $cast=1
+    $ranfromat=0
+    $usedstair=0
+    $magic=1
+    $melee=0
+    $bookcast=0
+    $ranfromat=0
+    $tries=0
+    $spellname="acid bolt"
+    $spellbookname=""
+    $castinvis=0
+    $title = GUICreate("IDHopBotV0.1Beta", 452, 291, 719, 135)
+    $Carmor = GUICtrlCreateCheckbox("armor", 8, 40, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Camulet = GUICtrlCreateCheckbox("amulet", 8, 56, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cbracer = GUICtrlCreateCheckbox("bracer", 8, 72, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cweapon = GUICtrlCreateCheckbox("weapon", 8, 88, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cmissileweapon = GUICtrlCreateCheckbox("missileweapon", 8, 104, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Ctool = GUICtrlCreateCheckbox("tool", 8, 120, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cinstrument = GUICtrlCreateCheckbox("instrument", 8, 136, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cring = GUICtrlCreateCheckbox("ring", 8, 152, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cwand = GUICtrlCreateCheckbox("wand", 8, 168, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cpotion = GUICtrlCreateCheckbox("potion", 8, 184, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cscroll = GUICtrlCreateCheckbox("scroll", 8, 200, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cbook = GUICtrlCreateCheckbox("book", 8, 216, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cfood = GUICtrlCreateCheckbox("food", 8, 232, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cgold = GUICtrlCreateCheckbox("gold", 8, 248, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Cgem = GUICtrlCreateCheckbox("gem", 8, 264, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $inputspell = GUICtrlCreateInput("spellname", 320, 48, 121, 21)
+    $Label1 = GUICtrlCreateLabel("Spell to cast:", 224, 56, 65, 17)
+    $Label2 = GUICtrlCreateLabel("first word of title:", 224, 72, 87, 17)
+    $bookcastinput = GUICtrlCreateInput("ancardia", 320, 72, 121, 21)
+    $Cblinkdog = GUICtrlCreateCheckbox("stop for blink dog", 128, 120, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Ccat = GUICtrlCreateCheckbox("stop for cats", 128, 136, 97, 17)
+    GUICtrlSetState(-1, 1)
+    $Shp = GUICtrlCreateSlider(128, 168, 150, 45)
+    GUICtrlSetLimit (-1,100,0)
+    GUICtrlSetData($shp, 75)
+    $Smp = GUICtrlCreateSlider(128, 216, 150, 45)
+    GUICtrlSetLimit (-1,100,0)
+    GUICtrlSetData($smp, 10)
+    $Cquickm = GUICtrlCreateCheckbox("quickmark", 128, 250, 150, 45)
+    GUICtrlSetState(-1, 1)
+    $Label3 = GUICtrlCreateLabel("ID Hop bot", 152, 0, 128, 29, $SS_CENTER)
+    GUICtrlSetFont(-1, 14, 400, 0, "Snap ITC")
+    $Label4 = GUICtrlCreateLabel("Scripted by Tomme", 312, 168, 95, 17)
+    $Label5 = GUICtrlCreateLabel("thx to", 336, 184, 30, 17)
+    $Label6 = GUICtrlCreateLabel("Gutt", 304, 208, 24, 17)
+    $Label7 = GUICtrlCreateLabel("Enihi", 328, 232, 27, 17)
+    $Label8 = GUICtrlCreateLabel("Samin", 360, 248, 33, 17)
+    $Label9 = GUICtrlCreateLabel("HP", 112, 168, 19, 17)
+    $Label10 = GUICtrlCreateLabel("MP", 112, 216, 20, 17)
+    $Bstart = GUICtrlCreateButton("start", 320, 104, 75, 25)
+    $Breset = GUICtrlCreateButton("reset", 320, 128, 75, 25)
+    $Battmode = GUICtrlCreateButton("Attackmode", 136, 56, 75, 25)
+    GUISetState(@SW_SHOW)
+    $mplow=0
+    func gal ()
+        while $copiedtoclip=0
+            ControlSend($handle, "","" , "!{SPACE}")
+            sleep(50)
+            ControlSend($handle, "","" , "o")
+            sleep(60)
+            $raw=ClipGet()
+            if @error then MsgBox(0,"","failed to retrieve clipboard")
+            $checkup=StringInStr($raw,"DV/PV",1)
+            if $checkup>0 then
+                $copiedtoclip=1
+            EndIf
+            $raw=ClipGet()
+            $checkdark=StringInStr($raw,"It's dark here")
+            if $checkdark>0 Then
+                $checkup=StringInStr($raw,"leading upwards")
+                if $checkup>0 Then
+                    ControlSend($handle, "","" , "<")
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(100)
+                EndIf
+                $checkup=StringInStr($raw,"leading downwards")
+                if $checkup>0 Then
+                    ControlSend($handle, "","" , ">")
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(100)
+                EndIf
+            EndIf
+            $checkspellmenu=StringInStr($raw,"SELECT A SPELL TO CAST",0,2)
+            if $checkspellmenu>0 then
+                ControlSend($handle, "","" , "Z")
+                sleep(150)
+            EndIf
+        WEnd
+        $copiedtoclip=0
+        FileClose($File)
+        local $file = FileOpen(@ScriptDir&"\log.txt", 2)
+        If $file = -1 Then
+            MsgBox(0, "Error", "Unable to open file1.")
+            Exit
+        EndIf
+        FileWrite($file, $raw)
+        local $file = FileOpen(@ScriptDir&"\log.txt", 0)
+        If $file = -1 Then
+            MsgBox(0, "Error", "Unable to open file2.")
+            Exit
+        EndIf
+        while 1 ;find adommap #
+            Local $data=FileReadline($file)
+            If @error = -1 Then ExitLoop
+            $linenumber +=1
+        WEnd
+        $lastline=$linenumber
+        $linenumber=1
+        $liline=$lastline-1
+        $vstatline=$lastline-2
+        $fstatline=$lastline-3
+        $mapline20=$lastline-4
+        $mapline1=$lastline-23
+        $tif2line=$lastline-24
+        $tif1line=$lastline-25
+        $firstmapline=$mapline1
+        $lastmapline=$mapline20
+        $pcleftx=$pcx-1
+        $pcrightx=$pcx+1
+        $pcdowny=$pcy+1
+        $pcupy=$pcy-1
+        $file = FileOpen(@ScriptDir&"\log.txt", 0)
+        $x=1
+        $y=1
+       
+        $sfoun=0
+        $vsline=FileReadLine($file,$vstatline)
+        $vstatarray=stringsplit($vsline,":",1)
+        if ubound($vstatarray)=7 Then
+            $dvpv=$vstatarray[2]
+            $hp=$vstatarray[3]
+            $mp=$vstatarray[4]
+            $exp=$vstatarray[5]
+            $speed=$vstatarray[6]
+            if $speedcomp=0 Then
+                $speedold=$speed+100
+                $speedcomp=1
+            EndIf
+            if $speedold=$speed AND $soa=1 Then
+                ControlSend($handle, "","" , "Z")
+                sleep(100)
+                ControlSend($handle, "","" , "9")
+                sleep(100)
+                $speedcomp=0
+            EndIf
+            $hpmaxmin=stringsplit($hp,"(",1)
+            if IsArray($hpmaxmin) Then
+                $hpc=StringTrimLeft ($hpmaxmin[1],1)
+                if ubound($hpmaxmin)>1 Then
+                    $hpmax=stringsplit($hpmaxmin[2],")",1)
+                    $hpm=$hpmax[1]
+                    $hpl=Round (($hpm/100)*$shppercent)
+                    if $hpc<=$hpl Then
+                        MsgBox(0,"IDHopBot","Hp dropped below 4/5")
+                    EndIf
+                EndIf
+            EndIf
+            $mpmaxmin=stringsplit($mp,"(",1)
+            if IsArray($mpmaxmin) Then
+                $mpc=StringTrimLeft ($mpmaxmin[1],1)
+                $mpmax=stringsplit($mpmaxmin[2],")",1)
+                $mpm=$mpmax[1]
+                $mpl=Round(($mpm/100)*$smppercent)
+                if $mpc<=$mpl Then
+                    $mplow=1
+                EndIf
+            EndIf
+        EndIf
+        $sf=0
+        $lil=FileReadLine($file,$liline)
+        Select
+            case StringInStr($lil,"hungry")
+                $hungry=1
+            case StringInStr($lil,"blind")
+                if $mudface=0 Then
+                    ControlSend($handle, "","" , "F")
+                    sleep(100)
+                    ControlSend($handle, "","" , "{ENTER}")
+                    sleep(100)
+                    $mudface=1
+                Else
+                    MsgBox(0,"IDHopBot","You are blind")
+                    $mudface=0
+                EndIf
+            case StringInStr($lil,"poisoned")
+                MsgBox(0,"IDHopBot","You are poisoned")
+            case StringInStr($lil,"sick")
+                MsgBox(0,"IDHopBot","You are sick")
+            case StringInStr($lil,"paral")
+                MsgBox(0,"IDHopBot","You are paralyzed!")
+            case StringInStr($lil,"sleeping")
+                MsgBox(0,"IDHopBot","You are asleep")
+            case StringInStr($lil,"confused")
+                MsgBox(0,"IDHopBot","You are confused")
+            case StringInStr($lil,"strained")
+                MsgBox(0,"IDHopBot","You are strained")
+        EndSelect
+        if StringInStr($lil,"invisibile") AND $castinvis=1 Then
+            sleep(1)
+        Elseif  $castinvis=1 Then
+            ControlSend($handle, "","" , "Z")
+            sleep(70)
+            ControlSend($handle, "","" , "6")
+            sleep(70)
+            ControlSend($handle, "","" , "5")
+            sleep(70)
+            ControlSend($handle, "","" , "{ENTER}")
+            sleep(70)
+        EndIf    
+        for $i=0 to ubound($itemx)-1
+            if $i=0 Then
+                $itemx[0]="notset"
+                $itemy[0]="notset"
+                $itemclass[0]="notset"
+            Else
+            _ArrayDelete($itemx,$i)
+            _ArrayDelete($itemy,$i)
+            _ArrayDelete($itemclass,$i)
+            endif
+        next
+        for $i=0 to ubound($monsterx)-1
+            if $i=0 Then
+                $monsterx[0]="notset"
+                $monstery[0]="notset"
+                $monstername[0]="notset"
+            Else
+            _ArrayDelete($monsterx,$i)
+            _ArrayDelete($monstery,$i)
+            _ArrayDelete($monstername,$i)
+            endif
+        next
+        for $i=0 to ubound($wallx)-1
+            if $i=0 Then
+                $wallx[0]="notset"
+                $wally[0]="notset"
+            Else
+            _ArrayDelete($wallx,$i)
+            _ArrayDelete($wally,$i)
+            endif
+        next
+        $pcx=0
+        $pcy=0
+        $firstmapline=$mapline1
+        $cattele=0
+        While 1 ;log items/mobs/pc#
+            $data=FileReadline($file,$firstmapline)
+            $char=StringRegExp ( $data,".",3)
+            for $i = 0 to UBound($char) - 1
+            select
+                case $char[$i]="@"
+                    IF $pcx>0 then
+                        ControlSend($handle, "","" , "Z")
+                        sleep(70)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{ENTER}")
+                        sleep(70)
+                        ControlSend($handle, "","" , ">")
+                        sleep(70)
+                        ControlSend($handle, "","" , "<")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        if $ranfromat=1 Then
+                            ControlSend($handle, "","" , "Z")
+                            sleep(70)
+                            ControlSend($handle, "","" , "1")
+                            sleep(70)
+                            ControlSend($handle, "","" , "{ENTER}")
+                            sleep(70)
+                            $ranfromat=0
+                        EndIf
+                        $ranfromat=1
+                    else
+                        $pcx=$x
+                        $pcy=$y
+                        if $newmap=1 Then
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                            $newmap=0
+                        EndIf
+                    EndIf
+                Case $char[$i]='['
+                    if $x1armor=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="armor"
+                        Else
+                            _ArrayAdd($itemclass,"armor")
+                        EndIf
+                    EndIf
+                Case $char[$i]="'"
+                    if $x1amulet=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="amulet"
+                        Else
+                            _ArrayAdd($itemclass,"amulet")
+                        EndIf
+                    EndIf
+                Case $char[$i]='~'
+                    if $x1bracer=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="bracer"
+                        Else
+                            _ArrayAdd($itemclass,"bracer")
+                        EndIf
+                    EndIf
+                Case $char[$i]='('
+                    if $x1weapon=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="weapon"
+                        Else
+                            _ArrayAdd($itemclass,"weapon")
+                        EndIf
+                    EndIf
+                Case $char[$i]='}'
+                    if $x1missileweapon=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="missileweapon"
+                        Else
+                            _ArrayAdd($itemclass,"missileweapon")
+                        EndIf
+                    EndIf
+                Case $char[$i]=']'
+                    if $x1tool=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="tool"
+                        Else
+                            _ArrayAdd($itemclass,"tool")
+                        EndIf
+                    EndIf
+                Case $char[$i]='='
+                    if $x1ring=1 AND $xriver=0 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="ring"
+                        Else
+                            _ArrayAdd($itemclass,"ring")
+                        EndIf
+                    EndIf
+                Case $char[$i]='\'
+                    if $x1wand=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="wand"
+                        Else
+                            _ArrayAdd($itemclass,"wand")
+                        EndIf
+                    EndIf
+                Case $char[$i]='!'
+                    if $x1potion=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="potion"
+                        Else
+                            _ArrayAdd($itemclass,"potion")
+                        EndIf
+                    EndIf
+                Case $char[$i]='?'
+                    if $x1scroll=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="scroll"
+                        Else
+                            _ArrayAdd($itemclass,"scroll")
+                        EndIf
+                    EndIf
+                Case $char[$i]='"'
+                    if $x1book=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="book"
+                        Else
+                            _ArrayAdd($itemclass,"book")
+                        EndIf
+                    EndIf
+                Case $char[$i]='{'
+                    if $x1instrument=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="instrument"
+                        Else
+                            _ArrayAdd($itemclass,"instrument")
+                        EndIf
+                    EndIf
+                Case $char[$i]='%'
+                    if $x1food=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="food"
+                        Else
+                            _ArrayAdd($itemclass,"food")
+                        EndIf
+                    EndIf
+                Case $char[$i]='$'
+                    if $x1gold=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="gold"
+                        Else
+                            _ArrayAdd($itemclass,"gold")
+                        EndIf
+                    EndIf
+                Case $char[$i]='*'
+                    if $x1gem=1 Then
+                        if $itemx[0]="notset" Then
+                            $itemx[0]=$x
+                        Else
+                            _ArrayAdd($itemx,$x)
+                        EndIf
+                        if $itemy[0]="notset" Then
+                            $itemy[0]=$y
+                        Else
+                            _ArrayAdd($itemy,$y)
+                        EndIf
+                        if $itemclass[0]="notset" Then
+                            $itemclass[0]="gem"
+                        Else
+                            _ArrayAdd($itemclass,"gem")
+                        EndIf
+                    EndIf
+                case StringIsAlpha($char[$i])
+                    Select
+                        Case $char[$i]="d"
+                            if $sdog=1 Then
+                                $dogf=1
+                                $dogx=$x
+                                $dogy=$y
+                            Else
+                                if $monsterx[0]="notset" Then
+                                    $monsterx[0]=$x
+                                Else
+                                    _ArrayAdd($monsterx,$x)
+                                EndIf
+                                if $monstery[0]="notset" Then
+                                    $monstery[0]=$y
+                                Else
+                                    _ArrayAdd($monstery,$y)
+                                EndIf
+                                if $monstername[0]="notset" Then
+                                    $monstername[0]=$char[$i]
+                                Else
+                                    _ArrayAdd($monstername,$char[$i])
+                                EndIf
+                            EndIf
+                        Case $char[$i]="f"
+                            if StringIsLower ($char[$i]) AND $scat=1 then
+                                $cattele=1
+                            Else
+                                if $monsterx[0]="notset" Then
+                                    $monsterx[0]=$x
+                                Else
+                                    _ArrayAdd($monsterx,$x)
+                                EndIf
+                                if $monstery[0]="notset" Then
+                                    $monstery[0]=$y
+                                Else
+                                    _ArrayAdd($monstery,$y)
+                                EndIf
+                                if $monstername[0]="notset" Then
+                                    $monstername[0]=$char[$i]
+                                Else
+                                    _ArrayAdd($monstername,$char[$i])
+                                EndIf
+                            EndIf
+                        Case Else
+                            if $monsterx[0]="notset" Then
+                                $monsterx[0]=$x
+                            Else
+                                _ArrayAdd($monsterx,$x)
+                            EndIf
+                            if $monstery[0]="notset" Then
+                                $monstery[0]=$y
+                            Else
+                                _ArrayAdd($monstery,$y)
+                            EndIf
+                            if $monstername[0]="notset" Then
+                                $monstername[0]=$char[$i]
+                            Else
+                                _ArrayAdd($monstername,$char[$i])
+                            EndIf
+                    EndSelect
+                case $char[$i]='&'
+                    if $monsterx[0]="notset" Then
+                        $monsterx[0]=$x
+                    Else
+                        _ArrayAdd($monsterx,$x)
+                    EndIf
+                    If $monstery[0]="notset" Then
+                        $monstery[0]=$y
+                    Else
+                        _ArrayAdd($monstery,$y)
+                    EndIf
+                    if $monstername[0]="notset" Then
+                        $monstername[0]=$char
+                    Else
+                        _ArrayAdd($monstername,$char)
+                    EndIf
+                case $char[$i]='<'
+                        if $last="down"then
+                            $stairs=1
+                            $sf=1
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                        endif
+                Case $char[$i]='>'
+                        if $last="up" then
+                            $stairs=0
+                            $sf=1
+                            $stairlocationx=$x
+                            $stairlocationy=$y
+                        EndIf
+                case $char[$i]='#'
+                    if $wallx[0]="notset" Then
+                        $wallx[0]=$x
+                    Else
+                        _ArrayAdd($wallx,$x)
+                    EndIf
+                    if $wally[0]="notset" Then
+                        $wally[0]=$y
+                    Else
+                        _ArrayAdd($wally,$y)
+                    EndIf
+                case $char[$i]='/'
+                    if $arrox[0]="notset" Then
+                        $arrox[0]=$x
+                    Else
+                        _ArrayAdd($arrox,$x)
+                    EndIf
+                    if $arroy[0]="notset" Then
+                        $arroy[0]=$y
+                    Else
+                        _ArrayAdd($arroy,$y)
+                    EndIf
+            EndSelect
+                $x+=1
+            next
+            $x=1
+            $y+=1
+            $firstmapline+=1
+            if $firstmapline=$lastmapline then
+                ExitLoop
+            EndIf
+        Wend
+        if $dogf=1 Then
+            ControlSend($handle, "","" , "l")
+            sleep(50)
+            $xdognumber=$dogx-$pcx
+            $ydognumber=$dogy-$pcy
+            while 1
+                if $xdognumber>0 then
+                    ControlSend($handle, "","" , "6")
+                    sleep(50)
+                    $xdognumber-=1
+                ElseIf $xdognumber<0 Then
+                    ControlSend($handle, "","" , "4")
+                    sleep(50)
+                    $xdognumber+=1
+                EndIf
+                if $xdognumber=0 Then
+                    ExitLoop
+                EndIf
+            WEnd
+            for $j=1 to abs($ydognumber)
+                if $ydognumber>0 then
+                    ControlSend($handle, "","" , "2")
+                    sleep(50)
+                ElseIf $ydognumber<0 Then
+                    ControlSend($handle, "","" , "8")
+                    sleep(50)
+                EndIf
+            Next
+            sleep(100)
+            ControlSend($handle, "","" , "!{SPACE}")
+            sleep(70)
+            ControlSend($handle, "","" , "o")
+            sleep(100)
+            $raw=ClipGet()
+            if StringInStr($raw,"This is a blink dog.") Then
+                MsgBox(0,"IDHopBot","Blink dog has been found")
+            Else
+                if $monsterx[0]="notset" Then
+                    $monsterx[0]=$dogx
+                Else
+                    _ArrayAdd($monsterx,$dogx)
+                EndIf
+                if $monstery[0]="notset" Then
+                    $monstery[0]=$dogy
+                Else
+                    _ArrayAdd($monstery,$dogy)
+                EndIf
+                if $monstername[0]="notset" Then
+                    $monstername[0]="d"
+                Else
+                    _ArrayAdd($monstername,"d")
+                EndIf
+            EndIf
+            ControlSend($handle, "","" , "z")
+        EndIf
+        $dogf=0
+        for $i=0 to ubound($wallx)-1
+            $walldistancex[$i]=($wallx[$i]-$pcx)
+            $walldistancey[$i]=($wally[$i]-$pcy)
+        Next
+        $smallestdistance=100
+        for $i=0 to ubound($itemx)-1 ;find closest item#
+            if $itemx>0 then
+                $itemxoffset=Abs($itemx[$i]-$pcx)
+                $itemyoffset=Abs($itemy[$i]-$pcy)
+                if $itemxoffset>$itemyoffset Then $distance=$itemxoffset
+                if $itemyoffset>$itemxoffset Then $distance=$itemyoffset
+                if $itemxoffset=$itemyoffset Then $distance=$itemxoffset    
+                if $smallestdistance>$distance then
+                    $smallestdistance=$distance
+                    $itemnumber=$i
+                EndIf
+            EndIf
+        Next
+        $stairx=$stairlocationx-$pcx
+        $stairy=$stairlocationy-$pcy
+        $mobloc1=0
+        $mobloc2=0
+        $mobloc3=0
+        $mobloc4=0
+        $mobloc6=0
+        $mobloc7=0
+        $mobloc8=0
+        $mobloc9=0
+        $cattele=0
+        $fire=0
+        for $i=0 to ubound($monsterx)-1 ;check if mobs are next to you#
+            if $monsterx[$i]>0 Then
+                select
+                    case $monsterx[$i]=$pcleftx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc1=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcy
+                                $mobloc4=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc7=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                    case $monsterx[$i]=$pcx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc2=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc8=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                    case $monsterx[$i]=$pcrightx
+                        Select
+                            Case $monstery[$i]=$pcdowny
+                                $mobloc3=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcy
+                                $mobloc6=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                            Case $monstery[$i]=$pcupy
+                                $mobloc9=1
+                                if $monstername[$i]="i" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="l" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="&" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="e" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="d" Then
+                                    $fire=1
+                                EndIf
+                                if $monstername[$i]="f" Then
+                                    $cattele=1
+                                EndIf
+                        EndSelect
+                EndSelect
+            EndIf
+        Next
+        $firstmapline=$mapline1
+        $foodletter=0
+        $firstmapline=$mapline1
+        $ringfound=0
+        for $i=0 to ubound($itemclass)-1
+            if $itemclass[$i]="ring" Then
+                if $ringfound=2 Then
+                    $xriver=1
+                endif
+                $ringfound+=1
+            EndIf
+        next
+        $firstmapline=$mapline1
+        FileClose($file)    
+    EndFunc
+    func attack ()
+        Select
+            case $melee=1
+                Select
+                    case $mobloc1=1
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc2=1
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc3=1
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc4=1
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc6=1
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc7=1
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc8=1
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                    case $mobloc9=1
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                EndSelect
+     
+            case $magic=1 AND $qm=4
+                Select
+                    case $mobloc1=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc2=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc3=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc4=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc6=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc7=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc8=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc9=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        controlsend($handle,"","",$spellletter)
+                        sleep(150)
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                EndSelect
+                   
+            case $magic=1 AND $qm=1
+                Select
+                    case $mobloc1=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "1")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc2=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "2")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc3=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "3")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc4=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "4")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc6=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "6")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc7=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "7")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc8=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "8")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                    case $mobloc9=1
+                        controlsend($handle,"","","Z")
+                        sleep(150)
+                        if $fire=1 Then
+                            controlsend($handle,"","","1")
+                        ElseIf $cattele=1 Then
+                            controlsend($handle,"","","7")
+                        Else
+                            controlsend($handle,"","","0")
+                        EndIf
+                        sleep(150)
+                        ControlSend($handle, "","" , "9")
+                        sleep(70)
+                        ControlSend($handle, "","" , "{enter}")
+                        sleep(70)
+                        $spellcastcounter+=1
+                EndSelect    
+                if $spellcastcounter=3 then $cast=1    
+            case $bookcast=1
+        EndSelect
+        if $mplow=1 Then
+            ControlSend($handle, "","" , "w5")
+            sleep(1000)
+            ControlSend($handle, "","" , "{enter}")
+        EndIf    
+    EndFunc
+    func findspell ()
+        if $magic=1 AND $cast=1 Then
+            ControlSend($handle, "","" , "Z")
+            sleep(150)
+            while $copiedtoclip=0
+                ControlSend($handle, "","" , "!{SPACE}")
+                sleep(20)
+                ControlSend($handle, "","" , "o")
+                sleep(70)
+                $raw=ClipGet()
+                $checkup=StringInStr($raw,"-",0,2)
+                if $checkup>0 then
+                    $copiedtoclip=1
+                EndIf
+            WEnd
+            $copiedtoclip=0
+            FileClose($File)
+            local $file = FileOpen(@ScriptDir&"\logformagic.txt", 2)
+            If $file = -1 Then
+                MsgBox(0, "Error", "Unable to open file1.")
+                Exit
+            EndIf
+            FileWrite($file, $raw)
+            local $file = FileOpen(@ScriptDir&"\logformagic.txt", 0)
+            If $file = -1 Then
+                MsgBox(0, "Error", "Unable to open file2.")
+                Exit
+            EndIf
+            $file = FileOpen(@ScriptDir&"\logformagic.txt", 0)
+            $firstline=0
+            while 1
+                $spellist=FileReadline($file,$firstline)
+                $spell=stringinstr($spellist,$spellname)
+                if $spell>0 Then
+                    $x=stringsplit($spellist,"-")
+                    $spelx=StringRegExp($x[1],'[[:alpha:]]',3)
+                    $spellletter=$spelx[0]
+                EndIf
+                $firstline+=1
+                if $firstline=200 then
+                    ExitLoop
+                EndIf
+            WEnd
+            sleep(150)
+     
+                ControlSend($handle, "","" , "!{SPACE}")
+                sleep(70)
+                ControlSend($handle, "","" , "o")
+                sleep(70)
+                $raw=ClipGet()
+                $checkup=StringInStr($raw," - ",0,2)
+                if $checkup>0 then
+                    ControlSend($handle, "","" , "Z")
+                    sleep(150)
+                    $copiedtoclip=1
+                EndIf
+     
+            $copiedtoclip=0
+           
+        EndIf
+        FileClose($file)
+        $cast=0
+    EndFunc
+    func movetoitem ()
+        if $itemx[0]>0 Then
+            $closeitemx=$itemx[$itemnumber]-$pcx
+            $closeitemy=$itemy[$itemnumber]-$pcy
+            Select
+                case $closeitemx<0
+                    $left=1
+                    $right=0
+                case $closeitemx=0
+                    $left=0
+                    $right=0
+                case $closeitemx>0
+                    $left=0
+                    $right=1
+            EndSelect
+            Select
+                case $closeitemy<0
+                    $up=1
+                    $down=0
+                case $closeitemy=0
+                    $up=0
+                    $down=0
+                case $closeitemy>0
+                    $up=0
+                    $down=1
+            EndSelect
+            $xcdir=0
+            Select
+                case $up=1 AND $left=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=-1 AND $walldistancey[$i]=-1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "4")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "8")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "7")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=1 AND $left=0 AND $right=0
+                    ControlSend($handle, "","" , "8")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=1 AND $right=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=1 AND $walldistancey[$i]=-1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "6")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "8")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "9")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=0 AND $left=1 AND $down=0
+                    ControlSend($handle, "","" , "4")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $up=0 AND $right=1 AND $down=0
+                    ControlSend($handle, "","" , "6")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $left=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=-1 AND $walldistancey[$i]=1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "4")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "2")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "1")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $left=0 AND $right=0
+                    ControlSend($handle, "","" , "2")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+                case $down=1 AND $right=1
+                    for $i=0 to ubound($walldistancex)-1
+                        if $walldistancex[$i]=1 AND $walldistancey[$i]=1 Then
+                            if $xcdir=0 then
+                                ControlSend($handle, "","" , "6")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            Else
+                                ControlSend($handle, "","" , "2")
+                                sleep(70)
+                                ControlSend($handle, "","" , "{enter}")
+                                sleep(70)
+                            EndIf
+                            $xcdir+=1
+                            if $xcdir=2 Then $xcdir=0
+                        EndIf
+                    Next
+                    ControlSend($handle, "","" , "3")
+                    sleep(70)
+                    ControlSend($handle, "","" , "{enter}")
+                    sleep(70)
+            EndSelect
+            sleep(100)
+            ControlSend($handle, "","" , ",")
+            sleep(70)
+            ControlSend($handle, "","" , "{enter}")
+        EndIf
+    EndFunc
+    func runtostairs ()
+       
+            if $stairx<>0 OR $stairy<>0 then
+                $attp=0
+                Select
+                    case $stairx<0
+                        $left=1
+                        $right=0
+                    case $stairx=0
+                        $left=0
+                        $right=0
+                    case $stairx>0
+                        $left=0
+                        $right=1
+                EndSelect
+                Select
+                    case $stairy<0
+                        $up=1
+                        $down=0
+                    case $stairy=0
+                        $up=0
+                        $down=0
+                    case $stairy>0
+                        $up=0
+                        $down=1
+                EndSelect
+                $xcdir=0
+                Select
+                    case $up=1 AND $left=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=-1 AND $walldistancey[$i]=-1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "4")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "8")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "7")
+                        sleep(20)
+                    case $up=1 AND $left=0 AND $right=0
+                        ControlSend($handle, "","" , "8")
+                        sleep(20)
+                    case $up=1 AND $right=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=1 AND $walldistancey[$i]=-1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "6")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "8")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "9")
+                        sleep(20)
+                    case $up=0 AND $left=1 AND $down=0
+                        ControlSend($handle, "","" , "4")
+                        sleep(20)
+                    case $up=0 AND $right=1 AND $down=0
+                        ControlSend($handle, "","" , "6")
+                        sleep(20)
+                    case $down=1 AND $left=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=-1 AND $walldistancey[$i]=1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "4")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "2")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "1")
+                        sleep(20)
+                    case $down=1 AND $left=0 AND $right=0
+                        ControlSend($handle, "","" , "2")
+                        sleep(20)
+                    case $down=1 AND $right=1
+                        for $i=0 to ubound($walldistancex)-1
+                            if $walldistancex[$i]=1 AND $walldistancey[$i]=1 Then
+                                if $xcdir=0 then
+                                    ControlSend($handle, "","" , "6")
+                                    sleep(20)
+                                Else
+                                    ControlSend($handle, "","" , "2")
+                                    sleep(20)
+                                EndIf
+                                $xcdir+=1
+                                if $xcdir=2 Then $xcdir=0
+                            EndIf
+                        Next
+                        ControlSend($handle, "","" , "3")
+                        sleep(20)
+                EndSelect
+                $tries=0    
+            EndIf
+            If  $sf=0 Then
+                    Select
+                        case $stairs=1
+                            ControlSend($handle, "","" , "<")
+                            ControlSend($handle, "","" , "{enter}")
+                            sleep(100)
+                            $stairs=0
+                            $xriver=0
+                            $newmap=1
+                            $stairlocationx=0
+                            $stairlocationy=0
+                            $last="up"
+                        Case $stairs=0
+                            ControlSend($handle, "","" , ">")
+                            sleep(100)
+                            ControlSend($handle, "","" , "{enter}")
+                            sleep(100)
+                            $stairs=1
+                            $xriver=0
+                            $newmap=1
+                            $last="down"
+                            $stairlocationx=0
+                            $stairlocationy=0
+                    EndSelect
+                    $tries+=1
+                    if $tries=2 Then
+                        Select
+                            Case $stairs=0
+                                $stairs=1
+                            Case $stairs=1
+                                $stairs=0
+                        EndSelect
+                        $tries=0
+                    EndIf
+                EndIf
+                $stairx=0
+                $stairy=0
+    EndFunc
+    func getguiinfo ()
+        $nMsg = GUIGetMsg()
+            Switch $nMsg
+                Case $GUI_EVENT_CLOSE
+                    Exit
+                Case $Bstart
+                    $titl=WinGetTitle($spellbookname)
+                    sleep(5000)
+                    WinActivate ($titl)
+                    $handle=WinGetHandle($titl)
+                    $on=1
+                Case $Breset
+                    $titl=WinGetTitle($spellbookname)
+                    WinActivate ($titl)
+                    $handle=WinGetHandle($titl)
+                    If @error Then
+                        MsgBox(4096, "Error", "Failed to find the A.D.O.M. window")
+                    Else
+                        $set=1
+                    EndIf
+                case $Battmode
+                    $mode+=1
+                    if $mode=4 then $mode=1
+                    Select
+                        case $mode=1
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Melee", 136, 56, 75, 25)
+                            $melee=1
+                            $magic=0
+                            $bookcast=0
+                        case $mode=2
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Magic", 136, 56, 75, 25)
+                            $melee=0
+                            $magic=1
+                            $bookcast=0
+                        case $mode=3
+                            GUICtrlDelete($Battmode)
+                            $Battmode = GUICtrlCreateButton("Bookcast", 136, 56, 75, 25)
+                            $melee=0
+                            $magic=1
+                            $bookcast=0
+                    EndSelect
+            EndSwitch
+        $x1armor=GUICtrlRead($carmor)
+        $x1amulet=GUICtrlRead($camulet)
+        $x1bracer=GUICtrlRead($cbracer)
+        $x1weapon=GUICtrlRead($cweapon)
+        $x1missileweapon=GUICtrlRead($cmissileweapon)
+        $x1tool=GUICtrlRead($ctool)
+        $x1instrument=GUICtrlRead($cinstrument)
+        $x1ring=GUICtrlRead($cring)
+        $x1wand=GUICtrlRead($cwand)
+        $x1potion=GUICtrlRead($cpotion)
+        $x1scroll=GUICtrlRead($cscroll)
+        $x1book=GUICtrlRead($cbook)
+        $x1food=GUICtrlRead($cfood)
+        $x1gold=GUICtrlRead($cgold)
+        $x1gem=GUICtrlRead($cgem)
+        $spellname=GUICtrlRead($inputspell)
+        $spellbookname=GUICtrlRead($bookcastinput)
+        $x1gem=GUICtrlRead($cgem)
+        $sdog=GUICtrlRead($Cblinkdog)
+        $scat=GUICtrlRead($Ccat)
+        $shppercent=GUICtrlRead($Shp)
+        $smppercent=GUICtrlRead($Smp)
+        $qm=GUICtrlRead($Cquickm)
+    EndFunc
+    func eat ()
+        if $monsterx[0]="notset" Then
+            if $hungry=1 Then
+                ControlSend($handle, "","" , "e")
+                    sleep(70)
+                ControlSend($handle, "","" , "a")
+                    sleep(70)
+                    $eatingcounter+=1
+                    if $eatingcounter=5 Then
+                        $hungry=0
+                        $eatingcounter=0
+                    EndIf
+            EndIf
+        EndIf
+    EndFunc
+    sleep(2000)
+    while 1
+        getguiinfo ()
+        While $on=1
+            getguiinfo ()
+            while $set=0
+                $handle=WinGetHandle($titl)
+                If @error Then
+                    MsgBox(4096, "Error", "Failed to find the A.D.O.M. window")
+                Else
+                    $set=1
+                EndIf
+            WEnd
+            getguiinfo ()
+            gal ()
+            gal ()
+            findspell ()
+            while $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0
+                $mudface=0
+                getguiinfo ()
+                attack ()
+                gal ()
+                gal ()
+                findspell ()
+            WEnd
+            while $itemx[0]>0
+                $mudface=0
+                while $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0
+                    $mudface=0
+                    getguiinfo ()
+                    attack ()
+                    gal ()
+                    gal ()
+                    findspell ()
+                WEnd
+                $mudface=0
+                getguiinfo ()
+                movetoitem()
+                gal ()
+                gal ()
+            WEnd
+            while $mobloc1=0 And $mobloc2=0 And $mobloc3=0 And $mobloc4=0 And $mobloc6=0 And $mobloc7=0 And $mobloc8=0 And $mobloc9=0 AND $itemx[0]="notset"
+                gal ()
+                getguiinfo ()
+                gal ()
+                eat ()
+                if $mobloc1>0 OR $mobloc2>0 OR $mobloc3>0 OR $mobloc4>0 OR $mobloc6>0 OR $mobloc7>0 OR $mobloc8>0 OR $mobloc9>0 OR $itemx[0]>0 Then
+                    ExitLoop
+                Else
+                    getguiinfo ()
+                    runtostairs ()
+                    getguiinfo ()
+                EndIf
+            WEnd        
+        WEnd
+    WEnd
+

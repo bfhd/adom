@@ -1,0 +1,15 @@
+^!FocusApp "ADOM"
+^!Delay 2
+
+^!Set %a%=0
+^!KeyboardDelay 001
+
+:Start
+^!If ^%a%=10 End
+^!Inc %a%
+
+^!Keyboard #,,,,,,,,,,w5w5w5ee#
+^!Goto Start
+
+:End
+
